@@ -1,7 +1,7 @@
-# Library yang digunakan agar program python dapat menggunakan database mysql
+#Library yang digunakan agar program python dapat menggunakan database mysql
 import mysql.connector
 
-# Melakukan koneksi ke database gopay
+#Melakukan koneksi ke database Gopay
 mydb = mysql.connector.connect(
   host="localhost",
   user="root",
@@ -9,10 +9,10 @@ mydb = mysql.connector.connect(
   database="gopay"
 )
 
-# mysql cursor untuk melakukan eksekusi statement yang berkomunikasi dengan mysql database
+#Mysql cursor untuk melakukan eksekusi statement yang berkomunikasi dengan mysql database
 mycursor = mydb.cursor()
 
-# fungsi untuk mendaftarkan akun baru pada gopay
+#Fungsi untuk mendaftarkan akun baru pada Gopay
 def new_gopay_user(nohp, nama):
     try:
         sql = "INSERT INTO user (telepon, nama, saldo) VALUES (%s, %s, 0)"
@@ -24,7 +24,7 @@ def new_gopay_user(nohp, nama):
     except:
         print("\nGagal mendaftarkan user baru\n")
 
-# fungsi untuk mengecek apakah user sudah terdaftar atau belum
+#Fungsi untuk mengecek apakah user sudah terdaftar dalam database
 def check_user(nohp):
     try:
         sql = "SELECT * FROM user WHERE telepon = %s"
@@ -42,7 +42,7 @@ def check_user(nohp):
     except:
         print("Gagal mendapatkan informasi akun", nohp)
 
-# fungsi untuk menampilkan saldo gopay
+#Fungsi untuk menampilkan saldo Gopay
 def check_gopay_balance(nohp):
     try:
         sql = "SELECT * FROM user WHERE telepon = %s"
@@ -56,7 +56,7 @@ def check_gopay_balance(nohp):
     except:
         print("\nGagal mendapatkan informasi akun", nohp)
 
-# fungsi untuk menampilkan history penggunaan akun gopay (pembayaran/topup) 
+#Fungsi untuk menampilkan history penggunaan akun Gopay (pembayaran/topup) 
 def check_history(nohp, date):
     try:
         sql = "SELECT * FROM history WHERE telepon = %s AND tanggal_history <= %s"
@@ -69,7 +69,7 @@ def check_history(nohp, date):
     except:
         print("\nGagal mendapatkan history akun", nohp)
 
-# fungsi untuk melakukan topup saldo gopay
+#Fungsi untuk melakukan topup saldo Gopay
 def increase_gopay_balance(nohp, nominal):
     try:
         print("\n[MENAMBAH SALDO]")
@@ -86,7 +86,7 @@ def increase_gopay_balance(nohp, nominal):
     except:
         print("\nGagal menambah saldo pada user", nohp)
 
-# fungsi pembayaran dengan potong saldo gopay
+#Fungsi pembayaran dengan memotong saldo Gopay
 def decrease_gopay_balance(nohp, nominal):
     try:
         saldo = check_gopay_balance(nohp)
@@ -111,7 +111,7 @@ def decrease_gopay_balance(nohp, nominal):
     except:
         print("\nGagal melakukan pembayaran pada user", nohp)
 
-# fungsi main yang digunakan untuk menampilkan menu yang digunakan untuk mengeksekusi program gopay
+#Fungsi main yang digunakan untuk menampilkan menu yang digunakan untuk mengeksekusi program Gopay
 if __name__ == '__main__':
     while True:
         command = input("[PILIH MENU]\n1. Daftar akun gopay\n2. Top Up Saldo\n3. Pembayaran\n4. Exit\n\nMenu -> ")

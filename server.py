@@ -1,12 +1,12 @@
-# Library yang digunakan untuk melakukan komunikasi antar program dengan menggunakan socket
+#Library yang digunakan untuk melakukan komunikasi antar program python dengan menggunakan socket
 
 import socket
 
-# Melakukan import program gopay.py untuk diintegrasikan dengan program tokopedia.py
+#Melakukan import program Gopay.py untuk diintegrasikan dengan program Tokopedia.py
 
 import gopay as gopay_app
 
-# Fungsi utama untuk server
+#Fungsi utama untuk server
 def server_program():
     print("Server Starting")
     host = socket.gethostname()
@@ -101,13 +101,13 @@ def server_program():
 
     conn.close()
 
-# fungsi main yang digunakan untuk menampilkan menu yang digunakan untuk mengeksekusi program server
+#Fungsi main yang digunakan untuk menampilkan menu yang digunakan untuk mengeksekusi program server
 if __name__ == '__main__':
 	while True:
-		command = input("\n[PILIH MENU]\n1. Nyalakan Server\n2. Matikan Server\n\nMenu -> ")
+		command = input("\n[PILIH MENU]\n1. Aktifkan Server\n2. Matikan Server\n\nMenu -> ")
 		if command == "1" :
 			server_program()
 		elif command == "2":
 			break
 		else:
-			print("command tidak ditemukan")
+			print("Command tidak ditemukan")

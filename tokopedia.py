@@ -1,12 +1,12 @@
-# Library yang digunakan untuk melakukan komunikasi antar program dengan menggunakan socket
+#Library yang digunakan untuk melakukan komunikasi antar program python dengan menggunakan socket
 
 import socket
 
-# Library yang digunakan agar program python dapat menggunakan database mysql
+#Library yang digunakan agar program python dapat menggunakan database mysql
 
 import mysql.connector
 
-# Melakukan koneksi ke database ais_tokopedia
+#Melakukan koneksi ke database tokopedia
 mydb = mysql.connector.connect(
   host="localhost",
   user="root",
@@ -14,22 +14,22 @@ mydb = mysql.connector.connect(
   database="tokopedia"
 )
 
-# mysql cursor untuk melakukan eksekusi statement yang berkomunikasi dengan mysql database
+#mysql cursor untuk melakukan eksekusi statement yang berkomunikasi dengan mysql database
 mycursor = mydb.cursor()
 
-# inisialisasi socket untuk client
+#Inisialisasi socket untuk client Tokopedia
 client_socket = socket.socket()
 
-# konfigurasi host dan port yang akan digunakan
+#Konfigurasi host dan port yang akan digunakan
 host = socket.gethostname()
 port = 5000
 
-# deklarasi variable global
+#Deklarasi variabel global
 user_id = None
 user_name = None
 user_status = 2
 
-# fungsi untuk mendaftarkan akun baru pada tokopedia
+#Fungsi untuk mendaftarkan akun baru pada Tokopedia
 def daftar_tokopedia(nohp, nama):
     try:
         sql = "INSERT INTO user (telepon, nama) VALUES (%s, %s)"
@@ -41,7 +41,7 @@ def daftar_tokopedia(nohp, nama):
     except:
         print("Gagal mendaftarkan user baru\n")
 
-# fungsi untuk login ke akun tokopedia
+#Fungsi untuk login ke akun Tokopedia
 def tokopedia_login():
     try:
         global user_id, user_name, user_status
@@ -60,7 +60,7 @@ def tokopedia_login():
     except:
         print("\n[LOGIN GAGAL]\n")
 
-# fungsi untuk mengaktifkan akun gopay pada akun tokopedia
+#Fungsi untuk mengaktifkan akun Gopay pada akun Tokopedia
 def activate_gopay():
     try:
         message = f"check_user;{user_id};;"
@@ -68,7 +68,7 @@ def activate_gopay():
         response = client_socket.recv(1024).decode()
 
         if response == "empty":
-            print("Gagal aktivasi gopay\nTidak akun dengan nomor tersebut!")
+            print("Gagal aktivasi gopay\nTidak ada akun dengan nomor tersebut!")
         elif response == "exist":
             sql = "UPDATE user SET gopay_status = 1 WHERE telepon = %s"
             val = (user_id, )
@@ -83,7 +83,7 @@ def activate_gopay():
     except:
         print("Gagal mengaktifkan gopay pada akun\n", user_name)
 
-# fungsi untuk menampilkan list item
+#Fungsi untuk menampilkan list item Tokopedia
 def list_item():
     try:
         print("[LIST ITEM TOKOPEDIA]")
@@ -99,7 +99,7 @@ def list_item():
 def list_tiket():
     pass
 
-# fungsi logout akun tokopedia
+#Fungsi logout akun Tokopedia
 def logout():
     global user_id, user_name, user_status
 
@@ -109,14 +109,13 @@ def logout():
 
     client_socket.close()
 
-# menu program tokopedia
+#Menu program Tokopedia
 def tokopedia_program():
 
     while True:
         command = input("[PILIH MENU]\n1. Cek Saldo\n2. Pesan Item\n3. Top Up\n4. Cashback\n5. History\n\nMenu -> ")
         
         if command == "1":
-            # message = "check_balance;" + user_id + ";;"
             message = f"check_balance;{user_id}"
             client_socket.send(message.encode())
             response = client_socket.recv(1024).decode()
@@ -193,7 +192,7 @@ def tokopedia_program():
         else:
             print("Maaf, perintah tidak dikenali\n")
 
-# fungsi main yang dieksekusi pertama kali saat program tokopedia berjalan
+#Fungsi main yang dieksekusi pertama kali saat program Tokopedia berjalan
 if __name__ == '__main__':
     while True:
         reg_status = input("Apakah Anda ingin menambahkan user baru? [y/n] ")
