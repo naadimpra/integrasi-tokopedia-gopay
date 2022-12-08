@@ -96,9 +96,6 @@ def list_item():
     except:
         print("\n[LIST ITEM GAGAL]\n")
 
-def list_tiket():
-    pass
-
 #Fungsi logout akun Tokopedia
 def logout():
     global user_id, user_name, user_status
