@@ -22,12 +22,11 @@ client_socket = socket.socket()
 
 #Konfigurasi host dan port yang akan digunakan
 host = socket.gethostname()
-port = 5000
+port = 3306
 
-#Deklarasi variabel global
-user_id = None
+status_user = 2
+id_user = None
 nama_user = None
-user_status = 2
 
 #Fungsi untuk mendaftarkan akun baru pada Tokopedia
 def register_tokopedia(nohp, nama):
@@ -44,7 +43,7 @@ def register_tokopedia(nohp, nama):
 #Fungsi untuk login ke akun Tokopedia
 def login_tokopedia():
     try:
-        global user_id, nama_user, user_status
+        global id_user, nama_user, status_user
         print("=== LOGIN PENGGUNA TOKOPEDIA ===")
         log_id = input("No HP => ")
         
@@ -53,9 +52,9 @@ def login_tokopedia():
         mycursor.execute(sql, val)
 
         result = mycursor.fetchone()
-        user_id = result[0]
+        id_user = result[0]
         nama_user = result[1]
-        user_status = result[2]
+        status_user = result[2]
         print("\nBerhasil Login\n")
     except:
         print("\nGagal untuk login, Nomor anda belum terdaftar dan/atau belum teraktivasi.\n")
@@ -63,7 +62,7 @@ def login_tokopedia():
 #Fungsi untuk mengaktifkan akun Gopay pada akun Tokopedia
 def aktivasi_gopay():
     try:
-        message = f"check_user;{user_id};;"
+        message = f"check_user;{id_user};;"
         client_socket.send(message.encode())
         response = client_socket.recv(1024).decode()
 
@@ -71,12 +70,12 @@ def aktivasi_gopay():
             print("Gagal untuk mengaktivasi Gopay\nTidak ada akun dengan nomor tersebut!")
         elif response == "exist":
             sql = "UPDATE user SET gopay_status = 1 WHERE telepon = %s"
-            val = (user_id, )
+            val = (id_user, )
             mycursor.execute(sql, val)
 
             mydb.commit()
-            global user_status
-            user_status = 1
+            global status_user
+            status_user = 1
             print("Berhasil mengaktivasi Gopay pada akun", nama_user)
         else:
             print("Gagal mengaktivasi Gopay pada akun", nama_user)
@@ -90,7 +89,7 @@ def program_tokopedia():
         command = input("=== HALAMAN UTAMA TOKOPEDIA ===\n1. Cek Saldo\n2. Pesan Item\n3. Top Up\n4. Cashback\n5. Log out\n\nMenu => ")
         
         if command == "1":
-            message = f"check_balance;{user_id}"
+            message = f"check_balance;{id_user}"
             client_socket.send(message.encode())
             response = client_socket.recv(1024).decode()
 
@@ -112,7 +111,7 @@ def program_tokopedia():
             pilihItem = int(input("Pilih Item dengan memasukkan Nomor Item => "))
             nominal = int(input("Jumlah Barang => "))
             bayar = result[pilihItem-1][3]*nominal
-            message = f"transaction;{user_id};{bayar}"
+            message = f"transaction;{id_user};{bayar}"
             client_socket.send(message.encode())
             response = client_socket.recv(1024).decode()
 
@@ -126,7 +125,7 @@ def program_tokopedia():
         elif command == "3":
             nominal = input("Nominal Top-Up => ")
 
-            message = f"topup;{user_id};{nominal}"
+            message = f"topup;{id_user};{nominal}"
             client_socket.send(message.encode())
             response = client_socket.recv(1024).decode()
 
@@ -138,7 +137,7 @@ def program_tokopedia():
         elif command == "4":
             nominal = input("Nominal cashback => ")
 
-            message = f"cashback;{user_id};;{nominal}"
+            message = f"cashback;{id_user};;{nominal}"
             client_socket.send(message.encode())
             response = client_socket.recv(1024).decode()
 
@@ -154,11 +153,11 @@ def program_tokopedia():
             
 #Fungsi logout akun Tokopedia
 def logout():
-    global user_id, nama_user, user_status
+    global id_user, nama_user, status_user
 
-    user_id = None
+    id_user = None
     nama_user = None
-    user_status = 2
+    status_user = 2
 
     client_socket.close()
 
@@ -181,12 +180,12 @@ if __name__ == '__main__':
     client_socket.connect((host, port))
     login_tokopedia()
 
-    if user_status == 1:
+    if status_user == 1:
         program_tokopedia()
-    elif user_status == 0:
+    elif status_user == 0:
         try:
             aktivasi_gopay()
-            if user_status == 1:
+            if status_user == 1:
                 program_tokopedia()
             else:
                 logout()

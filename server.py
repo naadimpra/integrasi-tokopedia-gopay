@@ -10,7 +10,7 @@ import gopay as gopay_app
 def server_program():
     print("Server Starting")
     host = socket.gethostname()
-    port = 5000 
+    port = 3306 
 
     server_socket = socket.socket()
     server_socket.bind((host, port))
@@ -32,7 +32,7 @@ def server_program():
         else:
             if data[0] == "check_balance":
                 try:
-                    response = str(gopay_app.check_gopay_balance(data[1]))
+                    response = str(gopay_app.cek_saldo_gopay(data[1]))
                     conn.send(response.encode())
                 except:
                     response = "failed"
@@ -51,20 +51,20 @@ def server_program():
                     conn.send(response.encode())
             elif (data[0] == "cashback") or (data[0] == "return"):
                 try:
-                    gopay_app.increase_gopay_balance(data[1], int(data[3]))
-                    gopay_app.decrease_gopay_balance(data[2], int(data[3]))
-                    response = str(gopay_app.check_gopay_balance(data[1]))
+                    gopay_app.tambah_saldo_gopay(data[1], int(data[3]))
+                    gopay_app.kurangi_saldo_gopay(data[2], int(data[3]))
+                    response = str(gopay_app.cek_saldo_gopay(data[1]))
                     conn.send(response.encode())
                 except:
                     response = "failed"
                     conn.send(response.encode())
             elif data[0] == "transaction":
                 try:
-                    saldo = gopay_app.check_gopay_balance(data[1])
+                    saldo = gopay_app.cek_saldo_gopay(data[1])
 
                     if saldo >= int(data[2]):
-                        gopay_app.decrease_gopay_balance(data[1], int(data[2]))
-                        response = str(gopay_app.check_gopay_balance(data[1]))
+                        gopay_app.kurangi_saldo_gopay(data[1], int(data[2]))
+                        response = str(gopay_app.cek_saldo_gopay(data[1]))
                     else:
                         response = "minus"
                     conn.send(response.encode())
@@ -77,8 +77,8 @@ def server_program():
                     nominal = int(data[2])
 
                     if nominal > 0:
-                        gopay_app.increase_gopay_balance(data[1], int(data[2]))
-                        response = str(gopay_app.check_gopay_balance(data[1]))
+                        gopay_app.tambah_saldo_gopay(data[1], int(data[2]))
+                        response = str(gopay_app.cek_saldo_gopay(data[1]))
                     else:
                         response = "minus"
                     conn.send(response.encode())

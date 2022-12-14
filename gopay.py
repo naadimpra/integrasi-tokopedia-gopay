@@ -1,4 +1,4 @@
-#Library yang digunakan agar program python dapat menggunakan database mysql
+#Library python-mysql
 import mysql.connector
 
 #Melakukan koneksi ke database Gopay
@@ -9,11 +9,11 @@ mydb = mysql.connector.connect(
   database="gopay"
 )
 
-#Mysql cursor untuk melakukan eksekusi statement yang berkomunikasi dengan mysql database
+#Mysql Cursor untuk eksekusi statement yang berkomunikasi dengan mysql database
 mycursor = mydb.cursor()
 
 #Fungsi untuk mendaftarkan akun baru pada Gopay
-def new_gopay_user(nohp, nama):
+def register_gopay(nohp, nama):
     try:
         sql = "INSERT INTO user (telepon, nama, saldo) VALUES (%s, %s, 0)"
         val = (nohp, nama)
@@ -43,7 +43,7 @@ def check_user(nohp):
         print("Gagal mendapatkan informasi akun", nohp)
 
 #Fungsi untuk menampilkan saldo Gopay
-def check_gopay_balance(nohp):
+def cek_saldo_gopay(nohp):
     try:
         sql = "SELECT * FROM user WHERE telepon = %s"
         val = (nohp, )
@@ -57,7 +57,7 @@ def check_gopay_balance(nohp):
         print("\nGagal mendapatkan informasi akun", nohp)
 
 #Fungsi untuk melakukan topup saldo Gopay
-def increase_gopay_balance(nohp, nominal):
+def tambah_saldo_gopay(nohp, nominal):
     try:
         print("\n=== MENAMBAH SALDO ===")
         sql = "UPDATE user SET saldo = saldo + %s WHERE telepon = %s"
@@ -74,9 +74,9 @@ def increase_gopay_balance(nohp, nominal):
         print("\nGagal menambah saldo pada user", nohp)
 
 #Fungsi pembayaran dengan memotong saldo Gopay
-def decrease_gopay_balance(nohp, nominal):
+def kurangi_saldo_gopay(nohp, nominal):
     try:
-        saldo = check_gopay_balance(nohp)
+        saldo = cek_saldo_gopay(nohp)
         if saldo >= nominal:
             print("=== MEMULAI PENGURANGAN SALDO ===")
             sql = "UPDATE user SET saldo = saldo - %s WHERE telepon = %s"
@@ -92,7 +92,7 @@ def decrease_gopay_balance(nohp, nominal):
             mydb.commit()
             print("\n====Pembayaran Berhasil ===\nBerhasil melakukan Pembayaran sebesar", nominal, "pada user", nohp)
 
-            saldo = check_gopay_balance(nohp)
+            saldo = cek_saldo_gopay(nohp)
         else:
             print("\n=== Pembayaran Gagal ===\nSaldo yang anda miliki tidak mencukupi untuk melakukan transaksi.")
     except:
@@ -101,14 +101,14 @@ def decrease_gopay_balance(nohp, nominal):
 #Fungsi main yang digunakan untuk menampilkan menu yang digunakan untuk mengeksekusi program Gopay
 if __name__ == '__main__':
     while True:
-        command = input("=== HALAMAN UTAMA GOPAY ===\n1. Daftar akun Gopay\n2. Top Up Saldo\n3. Pembayaran\n4. Exit\n\nMenu => ")
+        command = input("=== HALAMAN UTAMA GOPAY ===\n1. Daftar akun Gopay\n2. Top Up Saldo\n3. Pembayaran\n4. Logout\n\nMenu => ")
         if command == "1":
             try:
                 print("=== DAFTAR USER GOPAY BARU ===\n")
                 new_name = input("Nama => ")
                 new_nohp = input("No HP => ")
 
-                new_gopay_user(new_nohp, new_name)
+                register_gopay(new_nohp, new_name)
             except:
                 print("Format Salah!\n")
         elif command == "2":
@@ -117,16 +117,15 @@ if __name__ == '__main__':
                 print("Masukkan Nominal Saldo\n")
                 add_saldo = int(input("Saldo => "))
 
-                increase_gopay_balance(nohp, add_saldo)
+                tambah_saldo_gopay(nohp, add_saldo)
             except:
                 print("Format Salah!\n")
         elif command == "3":
             try:
                 nohp = input("No HP => ")
-                print("Masukkan Nominal Pembayaran\n")
-                add_saldo = int(input("Saldo => "))
+                add_saldo = int(input("Masukkan Nominal Pembayaran => "))
 
-                decrease_gopay_balance(nohp, add_saldo)
+                kurangi_saldo_gopay(nohp, add_saldo)
             except:
                 print("Format Salah!\n")
         elif command == "4":
