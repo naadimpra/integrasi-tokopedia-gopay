@@ -86,7 +86,7 @@ def aktivasi_gopay():
 def program_tokopedia():
 
     while True:
-        command = input("=== HALAMAN UTAMA TOKOPEDIA ===\n1. Cek Saldo\n2. Pesan Item\n3. Top Up\n4. Cashback\n5. Log out\n\nMenu => ")
+        command = input("=== HALAMAN UTAMA TOKOPEDIA ===\n1. Cek Saldo\n2. Membeli Barang\n3. Top Up\n4. Cashback\n5. Log out\n\nMenu => ")
         
         if command == "1":
             message = f"check_balance;{id_user}"
