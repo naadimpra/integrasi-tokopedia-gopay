@@ -27,7 +27,7 @@ def server_program():
         print(data)
 
         if not data_receive:
-            print("Client tokopedia", str(address), "telah logout")
+            print("Client Tokopedia", str(address), "telah keluar.")
             break
         else:
             if data[0] == "check_balance":
@@ -66,7 +66,7 @@ def server_program():
                         gopay_app.decrease_gopay_balance(data[1], int(data[2]))
                         response = str(gopay_app.check_gopay_balance(data[1]))
                     else:
-                        response = "mines"
+                        response = "minus"
                     conn.send(response.encode())
                 except:
                     print("TRANSACTION FAILED\n")
@@ -86,25 +86,15 @@ def server_program():
                     print("TOP UP FAILED\n")
                     response = "failed"
                     conn.send(response.encode())
-            elif data[0] == 'history':
-                try:
-                    hasil = gopay_app.check_history(data[1], data[2])
-                    print(f"HASIL: {hasil}\n")
-                    response = f"{hasil}"
-                    conn.send(response.encode())
-                except:
-                    print("HISTORY FAILED\n")
-                    response = "failed"
-                    conn.send(response.encode())
             else:
-                print("Perintah tidak dikenali!")
+                print("Command tidak ditemukan")
 
     conn.close()
 
 #Fungsi main yang digunakan untuk menampilkan menu yang digunakan untuk mengeksekusi program server
 if __name__ == '__main__':
 	while True:
-		command = input("\n[PILIH MENU]\n1. Aktifkan Server\n2. Matikan Server\n\nMenu -> ")
+		command = input("\n=== MENU SERVER ===\n1. Aktifkan Server\n2. Keluar\n\nMenu => ")
 		if command == "1" :
 			server_program()
 		elif command == "2":
