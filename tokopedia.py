@@ -100,13 +100,13 @@ def program_tokopedia():
                 print("Saldo", nama_user, "saat ini adalah Rp. ", response, "\n")
                 print("\nBerhasil melakukan cek saldo.")
         elif command == "2":
-            sql = "SELECT item.nama_item, item.rating_item, penjual.nama_penjual, item.harga_item FROM item LEFT JOIN penjual ON item.id_item=penjual.id_penjual"
+            sql = "SELECT item.nama_item, item.harga_item, penjual.nama_penjual, item.rating_item FROM item LEFT JOIN penjual ON item.id_item=penjual.id_penjual"
             mycursor.execute(sql)
-            print("=== DATA BARANG === \nNo.\tHarga\tRating\tPenjual\tNama Item")
+            print("=== DATA BARANG === \nNo.\tNama Barang\tHarga Barang\tPenjual\tRating")
             result = mycursor.fetchall()
 
             for num, i in enumerate(result):
-                print(f"{num+1}. {i[3]}\t{i[1]}\t{i[2]}\t{i[0]}")
+                print(f"{num+1}. {i[0]}\t{i[1]}\t{i[2]}\t{i[3]}")
 
             pilihItem = int(input("Pilih Item dengan memasukkan Nomor Item => "))
             nominal = int(input("Jumlah Barang => "))

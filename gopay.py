@@ -97,11 +97,27 @@ def kurangi_saldo_gopay(nohp, nominal):
             print("\n=== Pembayaran Gagal ===\nSaldo yang anda miliki tidak mencukupi untuk melakukan transaksi.")
     except:
         print("\nGagal melakukan pembayaran pada user", nohp)
+        
+#Fungsi untuk menampilkan history Gopay
+def cek_history_gopay(nohp):
+    try:
+        sql = "SELECT * FROM history WHERE telepon = %s"
+        val = (nohp, )
+        mycursor.execute(sql, val)
+
+        result = mycursor.fetchall()
+        print("=== HISTORY ANDA === \nNo.\tID Transaksi\tNominal\tNomor Pengguna\tKeterangan\tTanggal")
+        for num, i in enumerate(result):
+            print(f"{num+1}. {i[0]}\t{i[2]}\t{i[1]}\t{i[3]}\t{i[4]}")
+
+        return(result[2])
+    except:
+        print("\nGagal mendapatkan informasi akun", nohp)
 
 #Fungsi main yang digunakan untuk menampilkan menu yang digunakan untuk mengeksekusi program Gopay
 if __name__ == '__main__':
     while True:
-        command = input("=== HALAMAN UTAMA GOPAY ===\n1. Daftar akun Gopay\n2. Top Up Saldo\n3. Pembayaran\n4. Logout\n\nMenu => ")
+        command = input("=== HALAMAN UTAMA GOPAY ===\n1. Daftar akun Gopay\n2. Top Up Saldo\n3. Pembayaran\n4. History Gopay\n5. Logout\n\nMenu => ")
         if command == "1":
             try:
                 print("=== DAFTAR USER GOPAY BARU ===\n")
@@ -129,6 +145,12 @@ if __name__ == '__main__':
             except:
                 print("Format Salah!\n")
         elif command == "4":
+            try:
+                nohp = input("No HP => ")
+                cek_history_gopay(nohp)
+            except:
+                print("Format Salah!\n")
+        elif command == "5":
             break
         else:
             print("Command tidak ditemukan!\n")
