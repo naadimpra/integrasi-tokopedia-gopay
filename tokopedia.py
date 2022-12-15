@@ -62,7 +62,7 @@ def login_tokopedia():
 #Fungsi untuk mengaktifkan akun Gopay pada akun Tokopedia
 def aktivasi_gopay():
     try:
-        message = f"check_user;{id_user};;"
+        message = f"cek_user;{id_user};;"
         client_socket.send(message.encode())
         response = client_socket.recv(1024).decode()
 
@@ -89,7 +89,7 @@ def program_tokopedia():
         command = input("=== HALAMAN UTAMA TOKOPEDIA ===\n1. Cek Saldo\n2. Membeli Barang\n3. Top Up\n4. Cashback\n5. Log out\n\nMenu => ")
         
         if command == "1":
-            message = f"check_balance;{id_user}"
+            message = f"cek_saldo_gopay;{id_user}"
             client_socket.send(message.encode())
             response = client_socket.recv(1024).decode()
 
@@ -180,9 +180,7 @@ if __name__ == '__main__':
     client_socket.connect((host, port))
     login_tokopedia()
 
-    if status_user == 1:
-        program_tokopedia()
-    elif status_user == 0:
+    if status_user == 0:
         try:
             aktivasi_gopay()
             if status_user == 1:
@@ -191,5 +189,7 @@ if __name__ == '__main__':
                 logout()
         except:
             logout()
+    elif status_user == 1:
+        program_tokopedia()
     else:
         logout()

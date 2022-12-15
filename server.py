@@ -1,8 +1,8 @@
-#Library yang digunakan untuk melakukan komunikasi antar program python dengan menggunakan socket
+#Library python-socket
 
 import socket
 
-#Melakukan import program Gopay.py untuk diintegrasikan dengan program Tokopedia.py
+#Import program Gopay.py
 
 import gopay as gopay_app
 
@@ -15,10 +15,10 @@ def server_program():
     server_socket = socket.socket()
     server_socket.bind((host, port))
 
-    print("Waiting for connection")
+    print("Menunggu Koneksi")
     server_socket.listen(2)
     conn, address = server_socket.accept()
-    print("Connection from: " + str(address))
+    print("Koneksi dari: " + str(address))
 
     while True:
         data_receive = conn.recv(1024).decode()
@@ -30,16 +30,16 @@ def server_program():
             print("Client Tokopedia", str(address), "telah keluar.")
             break
         else:
-            if data[0] == "check_balance":
+            if data[0] == "cek_saldo_gopay":
                 try:
                     response = str(gopay_app.cek_saldo_gopay(data[1]))
                     conn.send(response.encode())
                 except:
                     response = "failed"
                     conn.send(response.encode())
-            elif data[0] == "check_user":
+            elif data[0] == "cek_user":
                 try:
-                    result = gopay_app.check_user(data[1])
+                    result = gopay_app.cek_user(data[1])
                     if result == 1:
                         response = "exist"
                     else:

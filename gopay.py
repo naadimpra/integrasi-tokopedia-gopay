@@ -25,7 +25,7 @@ def register_gopay(nohp, nama):
         print("\nGagal mendaftarkan user Gopay baru\n")
 
 #Fungsi untuk mengecek apakah user sudah terdaftar dalam database
-def check_user(nohp):
+def cek_user(nohp):
     try:
         sql = "SELECT * FROM user WHERE telepon = %s"
         val = (nohp, )
